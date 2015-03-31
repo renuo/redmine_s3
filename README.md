@@ -6,7 +6,7 @@ Changes are:
 1. Image thumbnail generation introduced. Image thumbnail is generated if it fails to display once page is opened (there is an AJAX call to server here). Folder for thumbnails is specified in config.
 2. Files are now stored using relative paths with default redmine folder structure (file_folder/year/month/file.ext). It is based on “disk_directory” column of the database.
 3. Now files have their original filenames included into “Content-Disposition” value of S3 object so that browser downloads files with original filenames without a digital prefix (e.g. image.jpg instead of 150319143442_image.jpg).
-4.URLs for thumbnails and images use full URL to S3 without the 'go to redmine-server => redirect to S3' behavior. Other files are still served with redirect.
+4. URLs for thumbnails and images use full URL to S3 without the 'go to redmine-server => redirect to S3' behavior. Other files are still served with redirect.
 5. Fixed "View" (clicking the “Magnifier” icon to the right from the file name) action for text files and diffs.
 6. files_to_s3 task now sets correct “Content-Type” and “Content-Disposition” for files. The task searches correct directory in database before uploading files to S3.
 7. files_to_s3 file existence check was fixed and now uses folder from S3 config.
