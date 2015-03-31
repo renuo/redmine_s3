@@ -1,11 +1,20 @@
 # S3 plugin for Redmine
 
 ## Description
-This [Redmine](http://www.redmine.org) plugin makes file attachments be stored on [Amazon S3](http://aws.amazon.com/s3) rather than on the local filesystem. This is a fork for [original gem](http://github.com/tigrish/redmine_s3) and difference is that this one supports Redmine 2
+This [Redmine](http://www.redmine.org) plugin makes file attachments be stored on [Amazon S3](http://aws.amazon.com/s3) rather than on the local filesystem. This is a fork of a [fork](http://github.com/ka8725/redmine_s3) for [original gem](http://github.com/tigrish/redmine_s3). It works with Redmine 3.0.0 and should work with 2.6.x versions.
+Changes are:
+1. Image thumbnail generation introduced. Image thumbnail is generated if it fails to display once page is opened (there is an AJAX call to server here). Folder for thumbnails is specified in config.
+2. Files are now stored using relative paths with default redmine folder structure (file_folder/year/month/file.ext). It is based on “disk_directory” column of the database.
+3. Now files have their original filenames included into “Content-Disposition” value of S3 object so that browser downloads files with original filenames without a digital prefix (e.g. image.jpg instead of 150319143442_image.jpg).
+4.URLs for thumbnails and images use full URL to S3 without the 'go to redmine-server => redirect to S3' behavior. Other files are still served with redirect.
+5. Fixed "View" (clicking the “Magnifier” icon to the right from the file name) action for text files and diffs.
+6. files_to_s3 task now sets correct “Content-Type” and “Content-Disposition” for files. The task searches correct directory in database before uploading files to S3.
+7. files_to_s3 file existence check was fixed and now uses folder from S3 config.
+8. Max file size validation using redmine attachment_max_size config was added both for task and for new files.
 
 ## Installation
 1. Make sure Redmine is installed and cd into it's root directory
-2. `git clone git://github.com/ka8725/redmine_s3.git plugins/redmine_s3`
+2. `git clone git://github.com/redcloak/redmine_s3.git plugins/redmine_s3`
 3. `cp plugins/redmine_s3/config/s3.yml.example config/s3.yml`
 4. Edit config/s3.yml with your favourite editor
 5. `bundle install --without development test` for installing this plugin dependencies (if you already did it, doing a `bundle install` again whould do no harm)
@@ -21,6 +30,7 @@ This [Redmine](http://www.redmine.org) plugin makes file attachments be stored o
 * Files can use private signed urls using the private option
 * Private file urls can expire a set time after the links were generated using the expires option
 * If you're using a Amazon S3 clone, then you can do the download relay by using the proxy option.
+* Thumbnails for image files are stored at folder 'tmp' inside bucket (can be changed at s3.yml)
 
 ## Options Detail
 * access_key_id: string key (required)
