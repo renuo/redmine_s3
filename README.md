@@ -27,7 +27,6 @@ Changes are:
 * The bucket specified in s3.yml will be created automatically when the plugin is loaded (this is generally when the server starts).
 * *Deprecated* (no longer supported, specify endpoint option instead) If you have created a CNAME entry for your bucket set the cname_bucket option to true in s3.yml and your files will be served from that domain.
 * After files are uploaded they are made public, unless private is set to true.
-* Public and private files can use HTTPS urls using the secure option
 * Files can use private signed urls using the private option
 * Private file urls can expire a set time after the links were generated using the expires option
 * If you're using a Amazon S3 clone, then you can do the download relay by using the proxy option.
@@ -39,13 +38,12 @@ Changes are:
 * bucket: string bucket name (required)
 * folder: string folder name inside bucket (for example: 'attachments')
 * endpoint: string endpoint instead of s3.amazonaws.com
-* secure: boolean true/false
 * private: boolean true/false
 * expires: integer number of seconds for private links to expire after being generated
 * proxy: boolean true/false
 * thumb_folder: string folder where attachment thumbnails are stored; defaults to 'tmp'
 * region: aws s3 region string (e.g. 'eu-central-1')
-* Defaults to private: false, secure: false, proxy: false, default endpoint, and default expires
+* Defaults to private: false, proxy: false, default endpoint, and default expires
 
 
 ## License

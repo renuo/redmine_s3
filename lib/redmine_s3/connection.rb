@@ -13,7 +13,6 @@ module RedmineS3
       :endpoint => nil,
       :private => false,
       :expires => nil,
-      :secure => false,
       :proxy => false,
       :thumb_folder => 'tmp',
       :region => nil
@@ -33,7 +32,7 @@ module RedmineS3
           :access_key_id => @@s3_options[:access_key_id],
           :secret_access_key => @@s3_options[:secret_access_key]
         }
-        options[:s3_endpoint] = self.endpoint unless self.endpoint.nil?
+        options[:endpoint] = self.endpoint unless self.endpoint.nil?
         options[:region] = self.region unless self.region.nil?
         @conn = Aws::S3::Resource.new(options)
       end
@@ -73,10 +72,6 @@ module RedmineS3
         @@s3_options[:private]
       end
 
-      def secure?
-        @@s3_options[:secure]
-      end
-
       def proxy?
         @@s3_options[:proxy]
       end
@@ -102,10 +97,11 @@ module RedmineS3
       def put(disk_filename, original_filename, data, content_type = 'application/octet-stream', target_folder = self.folder)
         object = self.object(disk_filename, target_folder)
         options = {}
+        options[:body] = data
         options[:acl] = :public_read unless self.private?
         options[:content_type] = content_type if content_type
         options[:content_disposition] = "inline; filename=#{ERB::Util.url_encode(original_filename)}"
-        object.write(data, options)
+        object.put(options)
       end
 
       def delete(filename, target_folder = self.folder)
@@ -116,11 +112,11 @@ module RedmineS3
       def object_url(filename, target_folder = self.folder)
         object = self.object(filename, target_folder)
         if self.private?
-          options = {:secure => self.secure?}
-          options[:expires] = self.expires unless self.expires.nil?
-          object.url_for(:read, options).to_s
+          options = {}
+          options[:expires_in] = self.expires unless self.expires.nil?
+          object.presigned_url(:get, **options).to_s
         else
-          object.public_url(:secure => self.secure?).to_s
+          object.public_url.to_s
         end
       end
 
