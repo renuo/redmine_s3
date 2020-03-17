@@ -22,7 +22,7 @@ development:
   proxy:
   thumb_folder:
 
-# Uncomment this to run plugin tests with standart redmine script
+# Uncomment this to run plugin tests with standard redmine script
 # test:
 #   access_key_id:
 #   secret_access_key:
