@@ -15,7 +15,8 @@ module RedmineS3
       :expires => nil,
       :secure => false,
       :proxy => false,
-      :thumb_folder => 'tmp'
+      :thumb_folder => 'tmp',
+      :region => nil
     }
 
     class << self
@@ -33,6 +34,7 @@ module RedmineS3
           :secret_access_key => @@s3_options[:secret_access_key]
         }
         options[:s3_endpoint] = self.endpoint unless self.endpoint.nil?
+        options[:region] = self.region unless self.region.nil?
         @conn = Aws::S3::Resource.new(options)
       end
 
@@ -77,6 +79,10 @@ module RedmineS3
 
       def proxy?
         @@s3_options[:proxy]
+      end
+
+      def region
+        @@s3_options[:region]
       end
 
       def thumb_folder

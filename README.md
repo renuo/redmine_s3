@@ -44,6 +44,7 @@ Changes are:
 * expires: integer number of seconds for private links to expire after being generated
 * proxy: boolean true/false
 * thumb_folder: string folder where attachment thumbnails are stored; defaults to 'tmp'
+* region: aws s3 region string (e.g. 'eu-central-1')
 * Defaults to private: false, secure: false, proxy: false, default endpoint, and default expires
 
 
