@@ -1,5 +1,29 @@
 # S3 plugin for Redmine
 
+## renuo/redmine_s3
+This Redmine plugin was forked from [this version](https://github.com/redcloak/redmine_s3). The aws-sdk dependency has been upgraded from v1 to v3. Found compatible with Redmine 3.4.11.
+
+Steps to add plugin to heroku-hosted Redmine application:
+* From the root directory of your Redmine, clone the plugin into the `plugins` folder: `git clone git://github.com/renuo/redmine_s3.git plugins/redmine_s3`
+* Copy the example S3 config file and configure as needed: `cp plugins/redmine_s3/config/s3.yml.example config/s3.yml`. Example:
+
+```yaml
+production:
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  bucket: <%= ENV["S3_BUCKET_NAME"] %>
+  folder:
+  endpoint:
+  private: true
+  expires:
+  proxy:
+  thumb_folder:
+  region: <%= ENV["AWS_REGION"] %>
+```
+
+* Run `bundle install` in the project root directory to install plugin dependencies.
+* Add plugin as a git submodule for heroku: `git submodule add -f https://github.com/renuo/redmine_s3.git plugins/redmine_s3`
+
 ## Description
 This [Redmine](http://www.redmine.org) plugin makes file attachments be stored on [Amazon S3](http://aws.amazon.com/s3) rather than on the local filesystem. This is a fork of a [fork](http://github.com/ka8725/redmine_s3) for [original gem](http://github.com/tigrish/redmine_s3). It works with Redmine 3.0.0 and should work with 2.6.x versions.
 Changes are:
