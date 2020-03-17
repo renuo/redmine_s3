@@ -1,6 +1,6 @@
 require 'aws-sdk'
 
-AWS.config(:ssl_verify_peer => false)
+Aws.config = { ssl_verify_peer: false }
 
 module RedmineS3
   class Connection
@@ -33,7 +33,7 @@ module RedmineS3
           :secret_access_key => @@s3_options[:secret_access_key]
         }
         options[:s3_endpoint] = self.endpoint unless self.endpoint.nil?
-        @conn = AWS::S3.new(options)
+        @conn = Aws::S3::Resource.new(options)
       end
 
       def conn
@@ -46,8 +46,8 @@ module RedmineS3
       end
 
       def create_bucket
-        bucket = self.conn.buckets[self.bucket]
-        self.conn.buckets.create(self.bucket) unless bucket.exists?
+        bucket = self.conn.bucket(self.bucket)
+        self.conn.bucket.create(self.bucket) unless bucket.exists?
       end
 
       def folder
@@ -89,8 +89,8 @@ module RedmineS3
       end
 
       def object(filename, target_folder = self.folder)
-        bucket = self.conn.buckets[self.bucket]
-        bucket.objects[target_folder + filename]
+        bucket = self.conn.bucket(self.bucket)
+        bucket.object(target_folder + filename)
       end
 
       def put(disk_filename, original_filename, data, content_type = 'application/octet-stream', target_folder = self.folder)

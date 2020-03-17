@@ -50,14 +50,14 @@ namespace :redmine_s3 do
 
     # init the connection, and grab the ObjectCollection object for the bucket
     conn = RedmineS3::Connection.establish_connection
-    objects = conn.buckets[RedmineS3::Connection.bucket].objects
+    object_collection = conn.bucket(RedmineS3::Connection.bucket).objects
 
     # create some threads to start syncing all of the queued files with s3
     threads = Array.new
     8.times do
       threads << Thread.new do
         while !file_q.empty?
-          update_file_on_s3(file_q.pop, objects)
+          update_file_on_s3(file_q.pop, object_collection)
         end
       end
     end
