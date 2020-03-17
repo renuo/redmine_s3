@@ -9,8 +9,8 @@ module RedmineS3
         unloadable # Send unloadable so it will not be unloaded in development
         attr_accessor :s3_access_key_id, :s3_secret_acces_key, :s3_bucket, :s3_bucket
         after_validation :put_to_s3
-        after_create      :generate_thumbnail_s3
-        before_destroy   :delete_from_s3
+        after_create :generate_thumbnail_s3
+        before_destroy :delete_from_s3
       end
     end
 
@@ -21,7 +21,7 @@ module RedmineS3
       def put_to_s3
         if @temp_file && (@temp_file.size > 0) && errors.blank?
           self.disk_directory = disk_directory || target_directory
-          self.disk_filename  = Attachment.disk_filename(filename, disk_directory) if disk_filename.blank?
+          self.disk_filename = Attachment.disk_filename(filename, disk_directory) if disk_filename.blank?
           logger.debug("Uploading to #{disk_filename}")
           content = @temp_file.respond_to?(:read) ? @temp_file.read : @temp_file
           RedmineS3::Connection.put(disk_filename_s3, filename, content, self.content_type)
@@ -37,7 +37,8 @@ module RedmineS3
       end
 
       # Prevent file uploading to the file system to avoid change file name
-      def files_to_final_location; end
+      def files_to_final_location;
+      end
 
       # Returns the full path the attachment thumbnail, or nil
       # if the thumbnail cannot be generated.
@@ -52,8 +53,8 @@ module RedmineS3
         else
           size = Setting.thumbnails_size.to_i
         end
-        size         = 100 unless size > 0
-        target       = "#{id}_#{digest}_#{size}.thumb"
+        size = 100 unless size > 0
+        target = "#{id}_#{digest}_#{size}.thumb"
         update_thumb = options[:update_thumb] || false
         begin
           RedmineS3::ThumbnailPatch.generate_s3_thumb(self.disk_filename_s3, target, size, update_thumb)

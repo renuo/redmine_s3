@@ -8,7 +8,9 @@ module RedmineS3
         require 'open-uri'
         img = Magick::ImageList.new
         url = RedmineS3::Connection.object_url(source)
-        open(url, 'rb') do |f| img = img.from_blob(f.read) end
+        open(url, 'rb') do |f|
+          img = img.from_blob(f.read)
+        end
         img = img.strip!
         img = img.resize_to_fit(size)
 

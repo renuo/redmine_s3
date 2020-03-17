@@ -44,9 +44,9 @@ module RedmineS3
         end
         if RedmineS3::Connection.proxy?
           send_data RedmineS3::Connection.get(@attachment.disk_filename_s3),
-                                          :filename => filename_for_content_disposition(@attachment.filename),
-                                          :type => detect_content_type(@attachment),
-                                          :disposition => (@attachment.image? ? 'inline' : 'attachment')
+                    :filename => filename_for_content_disposition(@attachment.filename),
+                    :type => detect_content_type(@attachment),
+                    :disposition => (@attachment.image? ? 'inline' : 'attachment')
         else
           redirect_to(RedmineS3::Connection.object_url(@attachment.disk_filename_s3))
         end
@@ -54,21 +54,21 @@ module RedmineS3
 
       def find_editable_attachments_s3
         if @attachments
-          @attachments.each { |a| a.increment_download }
+          @attachments.each {|a| a.increment_download}
         end
         if RedmineS3::Connection.proxy?
           @attachments.each do |attachment|
             send_data RedmineS3::Connection.get(attachment.disk_filename_s3),
-                                            :filename => filename_for_content_disposition(attachment.filename),
-                                            :type => detect_content_type(attachment),
-                                            :disposition => (attachment.image? ? 'inline' : 'attachment')
+                      :filename => filename_for_content_disposition(attachment.filename),
+                      :type => detect_content_type(attachment),
+                      :disposition => (attachment.image? ? 'inline' : 'attachment')
           end
         end
       end
 
       def find_thumbnail_attachment_s3
         update_thumb = 'true' == params[:update_thumb]
-        url          = @attachment.thumbnail_s3(update_thumb: update_thumb)
+        url = @attachment.thumbnail_s3(update_thumb: update_thumb)
         return render json: {src: url} if update_thumb
         return if url.nil?
         if RedmineS3::Connection.proxy?

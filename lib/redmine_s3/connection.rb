@@ -6,22 +6,22 @@ module RedmineS3
   class Connection
     @@conn = nil
     @@s3_options = {
-      :access_key_id     => nil,
+      :access_key_id => nil,
       :secret_access_key => nil,
-      :bucket            => nil,
-      :folder            => '',
-      :endpoint          => nil,
-      :private           => false,
-      :expires           => nil,
-      :secure            => false,
-      :proxy             => false,
-      :thumb_folder      => 'tmp'
+      :bucket => nil,
+      :folder => '',
+      :endpoint => nil,
+      :private => false,
+      :expires => nil,
+      :secure => false,
+      :proxy => false,
+      :thumb_folder => 'tmp'
     }
 
     class << self
       def load_options
-        file = ERB.new( File.read(File.join(Rails.root, 'config', 's3.yml')) ).result
-        YAML::load( file )[Rails.env].each do |key, value|
+        file = ERB.new(File.read(File.join(Rails.root, 'config', 's3.yml'))).result
+        YAML::load(file)[Rails.env].each do |key, value|
           @@s3_options[key.to_sym] = value
         end
       end
@@ -93,7 +93,7 @@ module RedmineS3
         bucket.objects[target_folder + filename]
       end
 
-      def put(disk_filename, original_filename, data, content_type='application/octet-stream', target_folder = self.folder)
+      def put(disk_filename, original_filename, data, content_type = 'application/octet-stream', target_folder = self.folder)
         object = self.object(disk_filename, target_folder)
         options = {}
         options[:acl] = :public_read unless self.private?
