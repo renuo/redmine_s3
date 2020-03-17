@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'
 
 Aws.config = { ssl_verify_peer: false }
 
