@@ -6,7 +6,8 @@ module RedmineS3
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
 
-        alias_method_chain :thumbnail_tag, :s3_patch
+        alias_method :thumbnail_tag_without_s3_patch, :thumbnail_tag
+        alias_method :thumbnail_tag, :thumbnail_tag_with_s3_patch
       end
     end
 
